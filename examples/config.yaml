@@ -150,10 +150,10 @@ alerting:
   providers:
     slack:
       type: slack
-      enabled: false # Disabled by default, enable with your webhook
+      enabled: true #false # Disabled by default, enable with your webhook
       config:
-        webhook_url: ${SLACK_WEBHOOK_URL:-https://hooks.slack.com/services/REPLACE/WITH/YOURS}
-        channel: "#monitoring-alerts"
+        webhook_url: ${SLACK_WEBHOOK_URL:-https://hooks.slack.com/services/REPLACE/WITH/YOURS} # https://api.slack.com/messaging/webhooks
+        channel: "#notifications" # NOTE: You can't override the default chosen when installing the Slack App.
         username: "Health Monitor"
         icon_emoji: ":warning:"
 

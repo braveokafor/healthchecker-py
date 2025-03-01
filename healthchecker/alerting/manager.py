@@ -6,6 +6,7 @@ from ..config.models import AlertConfig
 from ..monitoring.endpoint import CheckResult
 from .providers.base import AlertProvider
 from .providers.email import EmailProvider
+from .providers.slack import SlackProvider
 
 logger = logging.getLogger(__name__)
 
@@ -14,7 +15,7 @@ class AlertManager:
     """Manages alert delivery and rate limiting."""
 
     # Registry of available alert providers
-    PROVIDERS = {"email": EmailProvider}
+    PROVIDERS = {"email": EmailProvider, "slack": SlackProvider}
 
     def __init__(self, config: AlertConfig, mock_mode: bool = False):
         self.config = config
