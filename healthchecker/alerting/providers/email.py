@@ -47,7 +47,7 @@ class EmailProvider(AlertProvider):
             # Create the email
             msg = MIMEMultipart("alternative")
             msg["Subject"] = (
-                f"Health Check Alert: {result.endpoint_name} - {result.status}"
+                f"Health Check Alert: {result.endpoint_name} - {result.status.value.capitalize()}"
             )
             msg["From"] = self.from_address
             msg["To"] = ", ".join(self.to_addresses)
