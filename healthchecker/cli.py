@@ -2,9 +2,10 @@ import asyncio
 import argparse
 import logging
 import sys
-import time
 
 from .config.loader import load_config
+from .monitoring.checker import MonitoringManager
+from .alerting.manager import AlertManager
 from .utils.logging import configure_logging
 
 logger = logging.getLogger(__name__)
@@ -19,6 +20,10 @@ def parse_args():
         "--config",
         help="Path to the YAML configuration file",
         default="config.yaml",
+    )
+
+    parser.add_argument(
+        "--mock-alerts", help="Log alerts instead of sending them", action="store_true"
     )
 
     parser.add_argument(
@@ -58,9 +63,19 @@ async def main_async():
             logger.info("Configuration validated successfully")
             return 0
 
-        # return 0
-        logger.info("Sleeping for 30 seconds")
-        time.sleep(30)
+        # Setup alerting
+        alert_manager = AlertManager(config.alerting, mock_mode=args.mock_alerts)
+
+        # Setup monitoring
+        monitoring_manager = MonitoringManager(config, alert_manager)
+
+        # Run the monitoring system
+        logger.info(
+            f"Starting health check monitoring for {len(config.endpoints)} endpoints"
+        )
+        await monitoring_manager.start()
+
+        return 0
 
     except KeyboardInterrupt:
         logger.info("Interrupted by user")

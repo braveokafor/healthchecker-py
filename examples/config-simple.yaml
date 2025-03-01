@@ -2,22 +2,37 @@
 
 # Endpoints to monitor
 endpoints:
-  - name: json-placeholder-post
-    url: https://jsonplaceholder.typicode.com/posts/1
+  - name: json-placeholder-get-posts
+    url: https://jsonplaceholder.typicode.com/posts/5
     method: GET
     expected_status_codes: [200]
     response_time_threshold: 2.0
     timeout: 5.0
-    interval: 60.0
+    interval: 10.0
     retry:
       attempts: 3
-      backoff_factor: 0.5
-      status_forcelist: [500, 502, 503, 504]
     json_path_checks:
-      "$.id": "1"
-      "$.title": sunt aut facere repellat provident occaecati excepturi optio reprehenderit
-    failure_threshold: 3
-    failure_window: 300.0
+      "$.id": 5
+
+  - name: json-placeholder-get-posts-2
+    url: https://jsonplaceholder.typicode.com/posts/1
+    method: GET
+    expected_status_codes: [404]
+    response_time_threshold: 2.0
+    timeout: 5.0
+    interval: 7.0
+    retry:
+      attempts: 3
+
+  - name: json-placeholder-get-posts-3
+    url: https://jsonplaceholder.typicode.com/posts/1
+    method: GET
+    expected_status_codes: [500]
+    response_time_threshold: 2.0
+    timeout: 5.0
+    interval: 14.0
+    retry:
+      attempts: 3
 
 # Alerting configuration
 alerting:
@@ -62,7 +77,7 @@ alerting:
 # Logging configuration
 logging:
   level: INFO
-  format: json
+  format: text
   output: stdout
 
 # Global concurrency limit
