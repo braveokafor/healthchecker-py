@@ -2,68 +2,157 @@
 
 # Endpoints to monitor
 endpoints:
-  - name: example-api
-    url: https://api.example.com/health
+  - name: SUCCESS-httpbin-status
+    url: https://httpbin.org/status/200
     method: GET
-    headers:
-      Accept: application/json
-      X-API-Key: ${API_KEY:-demo-key}
     expected_status_codes: [200]
-    response_time_threshold: 2.0
+    response_time_threshold: 3.0
     timeout: 5.0
     interval: 60.0
     retry:
       attempts: 3
       backoff_factor: 0.5
-      status_forcelist: [500, 502, 503, 504]
-    json_path_checks:
-      "$.status": "healthy"
-      "$.database.connected": true
     failure_threshold: 3
     failure_window: 300.0
 
-  - name: payment-service
-    url: https://payments.example.com/status
+  # Example with query parameters for filtering
+  - name: SUCCESS-jsonplaceholder-filtered
+    url: https://jsonplaceholder.typicode.com/posts
     method: GET
     headers:
-      Authorization: Bearer ${PAYMENT_TOKEN}
-    expected_status_codes: [200, 201]
-    expected_status_ranges: ["200-299"]
-    response_time_threshold: 1.0
+      Accept: application/json
+    params:
+      userId: 1
+      _limit: 3
+    expected_status_codes: [200]
+    response_time_threshold: 2.0
+    timeout: 5.0
+    interval: 60.0
+    json_path_checks:
+      "$[0].userId": 1
+      "$[0].id": 1
+      "$[1].userId": 1
+      "$[2].userId": 1
+    failure_threshold: 2
+    failure_window: 300.0
+
+  # Example with Basic Auth
+  - name: SUCCESS-basic-auth
+    url: https://httpbin.org/basic-auth/user/pass
+    method: GET
+    headers:
+      Authorization: Basic ${BASIC_AUTH:-dXNlcjpwYXNz} # Base64 of "user:pass"
+    expected_status_codes: [200]
+    response_time_threshold: 2.0
+    timeout: 5.0
+    interval: 60.0
+    json_path_checks:
+      "$.authenticated": true
+      "$.user": "user"
+    failure_threshold: 2
+    failure_window: 180.0
+
+  # Example with API Key in header that will fail with invalid key
+  - name: FAIL-invalid-api-key
+    url: https://api.nasa.gov/planetary/apod
+    method: GET
+    headers:
+      Accept: application/json
+    params:
+      api_key: "INVALID_KEY_HERE"
+    expected_status_codes: [403]
+    response_time_threshold: 3.0
+    timeout: 5.0
+    interval: 90.0
+    failure_threshold: 2
+    failure_window: 180.0
+
+  # Example demonstrating successful regex pattern matching
+  - name: SUCCESS-regex-html
+    url: https://httpbin.org/html
+    method: GET
+    headers:
+      Accept: text/html
+    expected_status_codes: [200]
+    response_time_threshold: 2.0
     timeout: 3.0
     interval: 30.0
     regex_checks:
-      healthy_text: "All systems operational"
+      title_present: "<h1>Herman Melville - Moby-Dick</h1>"
+      paragraph_contains: "It was the Bottle Conjuror"
     failure_threshold: 2
     failure_window: 120.0
 
-  - name: auth-service
-    url: https://auth.example.com/health
+  # This endpoint will fail due to incorrect regex patterns
+  - name: FAIL-regex-mismatch
+    url: https://httpbin.org/json
+    method: GET
+    headers:
+      Accept: application/json
+    expected_status_codes: [200]
+    response_time_threshold: 2.0
+    timeout: 3.0
+    interval: 45.0
+    regex_checks:
+      incorrect_title: "\"title\":\\s*\"Wrong Title\"" # Actual is "Sample Slides"
+      nonexistent_field: '"nonexistent":true' # This field doesn't exist
+    failure_threshold: 2
+    failure_window: 120.0
+
+  # Example POST request with API Key in header
+  - name: SUCCESS-post-request
+    url: https://httpbin.org/post
     method: POST
     headers:
       Content-Type: application/json
+      X-API-Key: ${API_KEY:-test-key-123}
     body:
-      check: "deep"
-      components: ["database", "cache"]
+      name: "test"
+      check: "health"
     expected_status_codes: [200]
     response_time_threshold: 3.0
     timeout: 5.0
     interval: 120.0
     json_path_checks:
-      "$.healthy": true
-      "$.components.database": "operational"
-      "$.components.cache": "operational"
+      "$.json.name": "test"
+      "$.json.check": "health"
+      "$.headers.X-Api-Key": "test-key-123"
     failure_threshold: 2
     failure_window: 240.0
+
+  # This will fail due to status code mismatch
+  - name: FAIL-status-code
+    url: https://httpbin.org/status/500
+    method: GET
+    expected_status_codes: [200] # Expecting 200 but will get 500
+    response_time_threshold: 3.0
+    timeout: 5.0
+    interval: 60.0
+    retry:
+      attempts: 2
+      backoff_factor: 0.5
+    failure_threshold: 2
+    failure_window: 300.0
+
+  # This will fail due to slow response time
+  - name: FAIL-response-time
+    url: https://httpbin.org/delay/2 # 2-second delay
+    method: GET
+    expected_status_codes: [200]
+    response_time_threshold: 1.0 # Only allowing 1 second
+    timeout: 5.0
+    interval: 90.0
+    failure_threshold: 2
+    failure_window: 180.0
 
 # Alerting configuration
 alerting:
   providers:
     slack:
       type: slack
-      enabled: true
+      enabled: false # Disabled by default, enable with your webhook
       config:
-        webhook_url: ${SLACK_WEBHOOK_URL}
+        webhook_url: ${SLACK_WEBHOOK_URL:-https://hooks.slack.com/services/REPLACE/WITH/YOURS}
         channel: "#monitoring-alerts"
         username: "Health Monitor"
         icon_emoji: ":warning:"
@@ -73,29 +162,20 @@ alerting:
       enabled: true
       config:
         smtp_server: ${SMTP_SERVER:-localhost}
-        smtp_port: ${SMTP_PORT:-1025}
-        username: ${SMTP_USERNAME}
-        password: ${SMTP_PASSWORD}
+        smtp_port: ${SMTP_PORT:-1025} # MailHog default port
+        username: ${SMTP_USERNAME:-username}
+        password: ${SMTP_PASSWORD:-password}
         use_tls: ${SMTP_TLS:-false}
         from_address: "monitor@example.com"
         to_addresses:
           - "admin@example.com"
-          - "oncall@example.com"
 
-  # Time window for grouping alerts (seconds)
-  grouping_window: 300.0
-
-  # Minimum time between alerts for the same endpoint (seconds)
-  cooldown_period: 600.0
-
-  # Maximum alerts per hour (to prevent alert storms)
+  cooldown_period: 300.0 # Reduced for testing
   max_alerts_per_hour: 10
-
-  # Alert templates
   templates:
     critical: |
       🚨 CRITICAL: Health check failed for {endpoint_name}
-      
+
       URL: {url}
       Status: {status_code}
       Response Time: {response_time}
@@ -112,4 +192,4 @@ logging:
   output: stdout
 
 # Global concurrency limit
-concurrency_limit: 50
+concurrency_limit: 10 # Reduced for testing

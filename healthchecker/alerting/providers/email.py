@@ -20,9 +20,14 @@ class EmailProvider(AlertProvider):
         self.smtp_port = int(config.get("smtp_port", 25))
         self.username = config.get("username")
         self.password = config.get("password")
-        self.use_tls = config.get("use_tls", False)
         self.from_address = config.get("from_address")
         self.to_addresses = config.get("to_addresses", [])
+
+        use_tls_value = config.get("use_tls", False)
+        if isinstance(use_tls_value, str):
+            self.use_tls = use_tls_value.lower() == "true"
+        else:
+            self.use_tls = bool(use_tls_value)
 
         if not self.from_address or not self.to_addresses:
             logger.error("Email from_address and to_addresses are required")

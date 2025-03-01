@@ -6,7 +6,6 @@ import re
 class RetryConfig(BaseModel):
     attempts: int = Field(default=3, ge=1)
     backoff_factor: float = Field(default=0.3, ge=0)
-    status_forcelist: List[int] = Field(default=[500, 502, 503, 504])
 
 
 class EndpointConfig(BaseModel):
@@ -54,7 +53,6 @@ class AlertProviderConfig(BaseModel):
 
 class AlertConfig(BaseModel):
     providers: Dict[str, AlertProviderConfig]
-    grouping_window: float = 300.0  # seconds
     cooldown_period: float = 600.0  # seconds
     max_alerts_per_hour: int = 10
     templates: Dict[str, str] = Field(default_factory=dict)

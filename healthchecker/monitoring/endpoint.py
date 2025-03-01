@@ -14,9 +14,7 @@ logger = logging.getLogger(__name__)
 
 class HealthStatus(Enum):
     OK = "ok"
-    WARNING = "warning"
     CRITICAL = "critical"
-    UNKNOWN = "unknown"
 
 
 class CheckResult:
