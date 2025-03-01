@@ -32,9 +32,9 @@ fmt:              ## Format code using black & isort.
 
 .PHONY: lint
 lint:             ## Run pep8, black, mypy linters.
-	$(ENV_PREFIX)flake8 healthchecker/
-	$(ENV_PREFIX)black -l 79 --check healthchecker/
-	$(ENV_PREFIX)black -l 79 --check tests/
+	$(ENV_PREFIX)flake8 --ignore=E501,W503 healthchecker/
+	$(ENV_PREFIX)black --check healthchecker/
+	$(ENV_PREFIX)black --check tests/
 	$(ENV_PREFIX)mypy --ignore-missing-imports healthchecker/
 
 .PHONY: test
