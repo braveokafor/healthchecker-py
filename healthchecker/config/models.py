@@ -1,5 +1,5 @@
 from typing import Dict, List, Optional, Union, Any, Literal
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 import re
 
 
@@ -25,11 +25,14 @@ class EndpointConfig(BaseModel):
     failure_threshold: int = 3  # failures
     failure_window: float = 300.0  # seconds (5 minutes)
 
-    @field_validator("name", mode="before")
-    def set_name_if_empty(cls, v, info):
-        if not v and "url" in info.data:
-            return info.data["url"].split("://")[-1].split("/")[0]
-        return v
+    @model_validator(mode="after")
+    def set_default_name(self) -> "EndpointConfig":
+        if not self.name and self.url:
+            try:
+                self.name = self.url.split("://")[-1].split("/")[0]
+            except (IndexError, AttributeError):
+                self.name = self.url  # Fallback to full URL
+        return self
 
     @field_validator("expected_status_ranges", mode="after")
     @classmethod

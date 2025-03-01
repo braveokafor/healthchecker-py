@@ -17,13 +17,10 @@ endpoints:
 
   # Example with query parameters for filtering
   - name: SUCCESS-jsonplaceholder-filtered
-    url: https://jsonplaceholder.typicode.com/posts
+    url: https://jsonplaceholder.typicode.com/posts?userId=1&_limit=3
     method: GET
     headers:
       Accept: application/json
-    params:
-      userId: 1
-      _limit: 3
     expected_status_codes: [200]
     response_time_threshold: 2.0
     timeout: 5.0
@@ -54,12 +51,10 @@ endpoints:
 
   # Example with API Key in header that will fail with invalid key
   - name: FAIL-invalid-api-key
-    url: https://api.nasa.gov/planetary/apod
+    url: https://api.nasa.gov/planetary/apod?api_key=INVALID_KEY_HERE
     method: GET
     headers:
       Accept: application/json
-    params:
-      api_key: "INVALID_KEY_HERE"
     expected_status_codes: [403]
     response_time_threshold: 3.0
     timeout: 5.0
@@ -150,7 +145,7 @@ alerting:
   providers:
     slack:
       type: slack
-      enabled: true #false # Disabled by default, enable with your webhook
+      enabled: false # Disabled by default, enable with your webhook
       config:
         webhook_url: ${SLACK_WEBHOOK_URL:-https://hooks.slack.com/services/REPLACE/WITH/YOURS} # https://api.slack.com/messaging/webhooks
         channel: "#notifications" # NOTE: You can't override the default chosen when installing the Slack App.
