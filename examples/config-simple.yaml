@@ -1,0 +1,69 @@
+# Health Check Monitoring Configuration
+
+# Endpoints to monitor
+endpoints:
+  - name: json-placeholder-post
+    url: https://jsonplaceholder.typicode.com/posts/1
+    method: GET
+    expected_status_codes: [200]
+    response_time_threshold: 2.0
+    timeout: 5.0
+    interval: 60.0
+    retry:
+      attempts: 3
+      backoff_factor: 0.5
+      status_forcelist: [500, 502, 503, 504]
+    json_path_checks:
+      "$.id": "1"
+      "$.title": sunt aut facere repellat provident occaecati excepturi optio reprehenderit
+    failure_threshold: 3
+    failure_window: 300.0
+
+# Alerting configuration
+alerting:
+  providers:
+    email:
+      type: email
+      enabled: true
+      config:
+        smtp_server: localhost
+        smtp_port: 1025
+        username: username
+        password: password
+        use_tls: false
+        from_address: "monitor@example.com"
+        to_addresses:
+          - "admin@example.com"
+          - "oncall@example.com"
+
+  # Time window for grouping alerts (seconds)
+  grouping_window: 300.0
+
+  # Minimum time between alerts for the same endpoint (seconds)
+  cooldown_period: 600.0
+
+  # Maximum alerts per hour (to prevent alert storms)
+  max_alerts_per_hour: 10
+
+  # Alert templates
+  templates:
+    critical: |
+      🚨 CRITICAL: Health check failed for {endpoint_name}
+
+      URL: {url}
+      Status: {status_code}
+      Response Time: {response_time}
+      Error: {message}
+
+      Timestamp: {timestamp}
+
+      Please investigate immediately.
+
+# Logging configuration
+logging:
+  level: INFO
+  format: json
+  output: stdout
+
+# Global concurrency limit
+concurrency_limit: 50

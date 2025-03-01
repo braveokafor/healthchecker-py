@@ -1,0 +1,115 @@
+# Health Check Monitoring Configuration
+
+# Endpoints to monitor
+endpoints:
+  - name: example-api
+    url: https://api.example.com/health
+    method: GET
+    headers:
+      Accept: application/json
+      X-API-Key: ${API_KEY:-demo-key}
+    expected_status_codes: [200]
+    response_time_threshold: 2.0
+    timeout: 5.0
+    interval: 60.0
+    retry:
+      attempts: 3
+      backoff_factor: 0.5
+      status_forcelist: [500, 502, 503, 504]
+    json_path_checks:
+      "$.status": "healthy"
+      "$.database.connected": true
+    failure_threshold: 3
+    failure_window: 300.0
+
+  - name: payment-service
+    url: https://payments.example.com/status
+    method: GET
+    headers:
+      Authorization: Bearer ${PAYMENT_TOKEN}
+    expected_status_codes: [200, 201]
+    expected_status_ranges: ["200-299"]
+    response_time_threshold: 1.0
+    timeout: 3.0
+    interval: 30.0
+    regex_checks:
+      healthy_text: "All systems operational"
+    failure_threshold: 2
+    failure_window: 120.0
+
+  - name: auth-service
+    url: https://auth.example.com/health
+    method: POST
+    headers:
+      Content-Type: application/json
+    body:
+      check: "deep"
+      components: ["database", "cache"]
+    expected_status_codes: [200]
+    response_time_threshold: 3.0
+    timeout: 5.0
+    interval: 120.0
+    json_path_checks:
+      "$.healthy": true
+      "$.components.database": "operational"
+      "$.components.cache": "operational"
+    failure_threshold: 2
+    failure_window: 240.0
+
+# Alerting configuration
+alerting:
+  providers:
+    slack:
+      type: slack
+      enabled: true
+      config:
+        webhook_url: ${SLACK_WEBHOOK_URL}
+        channel: "#monitoring-alerts"
+        username: "Health Monitor"
+        icon_emoji: ":warning:"
+
+    email:
+      type: email
+      enabled: true
+      config:
+        smtp_server: ${SMTP_SERVER:-localhost}
+        smtp_port: ${SMTP_PORT:-1025}
+        username: ${SMTP_USERNAME}
+        password: ${SMTP_PASSWORD}
+        use_tls: ${SMTP_TLS:-false}
+        from_address: "monitor@example.com"
+        to_addresses:
+          - "admin@example.com"
+          - "oncall@example.com"
+
+  # Time window for grouping alerts (seconds)
+  grouping_window: 300.0
+
+  # Minimum time between alerts for the same endpoint (seconds)
+  cooldown_period: 600.0
+
+  # Maximum alerts per hour (to prevent alert storms)
+  max_alerts_per_hour: 10
+
+  # Alert templates
+  templates:
+    critical: |
+      🚨 CRITICAL: Health check failed for {endpoint_name}
+      
+      URL: {url}
+      Status: {status_code}
+      Response Time: {response_time}
+      Error: {message}
+
+      Timestamp: {timestamp}
+
+      Please investigate immediately.
+
+# Logging configuration
+logging:
+  level: INFO
+  format: json
+  output: stdout
+
+# Global concurrency limit
+concurrency_limit: 50
