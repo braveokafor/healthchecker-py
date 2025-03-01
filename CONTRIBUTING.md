@@ -1,6 +1,6 @@
 # How to develop on this project
 
-healthchecker_py welcomes contributions from the community.
+healthchecker welcomes contributions from the community.
 
 **You need PYTHON3!**
 

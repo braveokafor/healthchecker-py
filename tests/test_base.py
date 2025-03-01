@@ -1,5 +1,5 @@
-from healthchecker_py.base import NAME
+from healthchecker.base import NAME
 
 
 def test_base():
-    assert NAME == "healthchecker_py"
+    assert NAME == "healthchecker"

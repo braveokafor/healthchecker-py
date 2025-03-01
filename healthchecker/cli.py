@@ -1,4 +1,4 @@
-"""CLI interface for healthchecker_py project.
+"""CLI interface for healthchecker project.
 
 Be creative! do whatever you want!
 
@@ -12,7 +12,7 @@ Be creative! do whatever you want!
 def main():  # pragma: no cover
     """
     The main function executes on commands:
-    `python -m healthchecker_py` and `$ healthchecker_py `.
+    `python -m healthchecker` and `$ healthchecker `.
 
     This is your program's entry point.
 
