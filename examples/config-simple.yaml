@@ -27,12 +27,12 @@ endpoints:
   - name: json-placeholder-get-posts-3
     url: https://jsonplaceholder.typicode.com/posts/1
     method: GET
-    expected_status_codes: [500]
+    expected_status_codes: [200]
     response_time_threshold: 2.0
     timeout: 5.0
     interval: 14.0
-    retry:
-      attempts: 3
+    json_path_checks:
+      "$.id": 2
 
 # Alerting configuration
 alerting:
