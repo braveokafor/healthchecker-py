@@ -1,2 +1,48 @@
-site_name: healthchecker
-theme: readthedocs
+site_name: Health Check Monitor
+site_description: A production-grade automated health monitoring system for web services
+site_author: Brave Okafor
+repo_url: https://github.com/braveokafor/healthchecker-py
+repo_name: braveokafor/healthchecker-py
+
+theme:
+  name: material
+  palette:
+    primary: blue
+    accent: blue
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.expand
+    - navigation.indexes
+  icon:
+    repo: fontawesome/brands/github
+
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - admonition
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Installation: installation.md
+  - Configuration:
+      - Overview: configuration/index.md
+      - Endpoints: configuration/endpoints.md
+      - Alerting: configuration/alerting.md
+      - General Settings: configuration/general.md
+  - Usage:
+      - Overview: usage/index.md
+      - Command Line Options: usage/cli.md
+      - Docker: usage/docker.md
+  - Advanced Usage:
+      - Response Validation: advanced/validation.md
+  - Development:
+      - Project Structure: development/structure.md
+      - Extending the System: development/extending.md
+      - Testing: development/testing.md
+  - Deployment: deployment.md
+  - Troubleshooting: troubleshooting.md
+  - Contributing: contributing.md

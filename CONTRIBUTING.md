@@ -45,8 +45,6 @@ Run `make lint` to run the linter.
 
 Run `make test` to run the tests.
 
-Ensure code coverage report shows `100%` coverage, add tests to your PR.
-
 ## Build the docs locally
 
 Run `make docs` to build the docs.
@@ -57,7 +55,7 @@ Ensure your new changes are documented.
 
 This project uses [conventional git commit messages](https://www.conventionalcommits.org/en/v1.0.0/).
 
-Example: `fix(package): update setup.py arguments 🎉` (emojis are fine too)
+Example: `fix: update setup.py arguments 🎉` (emojis are fine too)
 
 ## Push your changes to your fork
 
@@ -67,7 +65,7 @@ Run `git push origin my_contribution`
 
 On github interface, click on `Pull Request` button.
 
-Wait CI to run and one of the developers will review your PR.
+Wait CI to run and I will review your PR.
 ## Makefile utilities
 
 This project comes with a `Makefile` that contains a number of useful utility.
@@ -85,29 +83,9 @@ test: lint        ## Run tests and generate coverage report.
 watch:            ## Run tests on every change.
 clean:            ## Clean unused files.
 virtualenv:       ## Create a virtual environment.
-release:          ## Create a new tag for release.
 docs:             ## Build the documentation.
-switch-to-poetry: ## Switch to poetry package manager.
-init:             ## Initialize the project based on an application template.
 ```
 
 ## Making a new release
 
-This project uses [semantic versioning](https://semver.org/) and tags releases with `X.Y.Z`
-Every time a new tag is created and pushed to the remote repo, github actions will
-automatically create a new release on github and trigger a release on PyPI.
-
-For this to work you need to setup a secret called `PIPY_API_TOKEN` on the project settings>secrets, 
-this token can be generated on [pypi.org](https://pypi.org/account/).
-
-To trigger a new release all you need to do is.
-
-1. If you have changes to add to the repo
-    * Make your changes following the steps described above.
-    * Commit your changes following the [conventional git commit messages](https://www.conventionalcommits.org/en/v1.0.0/).
-2. Run the tests to ensure everything is working.
-4. Run `make release` to create a new tag and push it to the remote repo.
-
-the `make release` will ask you the version number to create the tag, ex: type `0.1.1` when you are asked.
-
-> **CAUTION**:  The make release will change local changelog files and commit all the unstaged changes you have.
+This project uses [semantic versioning](https://semver.org/) and [release-please-action](https://github.com/googleapis/release-please-action).  
