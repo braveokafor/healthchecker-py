@@ -6,16 +6,16 @@ Health Check Monitor provides several command line options to control its behavi
 
 ```bash
 # Basic usage
-healthcheck-monitor --config config.yaml
+healthchecker --config config.yaml
 
 # Override log level
-healthcheck-monitor --config config.yaml --log-level DEBUG
+healthchecker --config config.yaml --log-level DEBUG
 
 # Just check if your config is valid
-healthcheck-monitor --config config.yaml --validate-only
+healthchecker --config config.yaml --validate-only
 
 # Test mode (doesn't send real alerts)
-healthcheck-monitor --config config.yaml --mock-alerts
+healthchecker --config config.yaml --mock-alerts
 ```
 
 ## Option Details

@@ -39,7 +39,7 @@ If the system is using excessive resources:
 Enable debug logging for more detailed information:
 
 ```bash
-healthcheck-monitor --config config.yaml --log-level DEBUG
+healthchecker --config config.yaml --log-level DEBUG
 ```
 
 This will show detailed information about:

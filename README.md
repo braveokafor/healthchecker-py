@@ -73,6 +73,12 @@ cd healthchecker-py
 pip install -e .
 ```
 
+### From Latest Release
+
+```bash
+pip install $(curl -s https://api.github.com/repos/braveokafor/healthchecker-py/releases/latest | grep "tarball_url" | cut -d '"' -f 4)
+```
+
 ### Using Docker
 
 ```bash
@@ -119,7 +125,7 @@ concurrency_limit: 10
 2. Start monitoring:
 
 ```bash
-healthcheck-monitor --config config.yaml --mock-alerts
+healthchecker --config config.yaml --mock-alerts
 ```
 
 ## Configuration Guide
@@ -243,16 +249,16 @@ headers:
 
 ```bash
 # Basic usage
-healthcheck-monitor --config config.yaml
+healthchecker --config config.yaml
 
 # Override log level
-healthcheck-monitor --config config.yaml --log-level DEBUG
+healthchecker --config config.yaml --log-level DEBUG
 
 # Just check if your config is valid
-healthcheck-monitor --config config.yaml --validate-only
+healthchecker --config config.yaml --validate-only
 
 # Test mode (doesn't send real alerts)
-healthcheck-monitor --config config.yaml --mock-alerts
+healthchecker --config config.yaml --mock-alerts
 ```
 
 ## Docker Examples
@@ -455,7 +461,7 @@ Memory and CPU usage scale with the number of endpoints. To optimise:
 Enable debug logging for more details:
 
 ```bash
-healthcheck-monitor --config config.yaml --log-level DEBUG
+healthchecker --config config.yaml --log-level DEBUG
 ```
 
 ## License

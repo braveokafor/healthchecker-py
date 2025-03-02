@@ -42,7 +42,7 @@ concurrency_limit: 10
 2. Start monitoring:
 
 ```bash
-healthcheck-monitor --config config.yaml --mock-alerts
+healthchecker --config config.yaml --mock-alerts
 ```
 
 ## Configuration Structure

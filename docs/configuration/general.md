@@ -43,7 +43,7 @@ export API_KEY="your-secret-key"
 export BASIC_AUTH="base64-encoded-credentials"
 
 # Then run with these variables available
-healthcheck-monitor --config config.yaml
+healthchecker --config config.yaml
 ```
 
 For Docker, you can pass environment variables using the `-e` flag:

@@ -7,7 +7,7 @@ This section covers the fundamental usage patterns for Health Check Monitor.
 Once you have a configuration file ready, you can start monitoring:
 
 ```bash
-healthcheck-monitor --config config.yaml
+healthchecker --config config.yaml
 ```
 
 ## Testing Your Configuration
@@ -15,7 +15,7 @@ healthcheck-monitor --config config.yaml
 To validate your configuration without actually sending alerts:
 
 ```bash
-healthcheck-monitor --config config.yaml --mock-alerts
+healthchecker --config config.yaml --mock-alerts
 ```
 
 ## Checking Configuration Validity
@@ -23,7 +23,7 @@ healthcheck-monitor --config config.yaml --mock-alerts
 To just check if your configuration file is valid:
 
 ```bash
-healthcheck-monitor --config config.yaml --validate-only
+healthchecker --config config.yaml --validate-only
 ```
 
 ## Monitoring Process
