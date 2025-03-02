@@ -4,6 +4,7 @@ A production-grade automated health monitoring system for web services built wit
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Python](https://img.shields.io/badge/python-3.9%2B-blue)
+[![Documentation](https://img.shields.io/badge/docs-mkdocs-blue)](https://braveokafor.github.io/healthchecker-py/)
 [![Build Status][badge_build_status]][link_build_status]
 [![Release Status][badge_release_status]][link_build_status]
 [![Issues][badge_issues]][link_issues]
@@ -12,6 +13,10 @@ A production-grade automated health monitoring system for web services built wit
 ## Overview
 
 Health Check Monitor helps you keep an eye on your web services by continuously checking their health status. Built with performance in mind, it can handle monitoring hundreds of endpoints simultaneously while using minimal resources.
+
+## Documentation
+
+For comprehensive documentation, please visit the [documentation site](https://braveokafor.github.io/healthchecker-py/).
 
 ### Key Features
 
