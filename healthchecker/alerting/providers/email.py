@@ -17,7 +17,6 @@ class EmailProvider(AlertProvider):
     def __init__(self, config: Dict[str, Any]):
         super().__init__(config)
         self.smtp_server = config.get("smtp_server", "localhost")
-        self.smtp_port = int(config.get("smtp_port", 25))
         self.username = config.get("username")
         self.password = config.get("password")
         self.from_address = config.get("from_address")
@@ -28,6 +27,13 @@ class EmailProvider(AlertProvider):
             self.use_tls = use_tls_value.lower() == "true"
         else:
             self.use_tls = bool(use_tls_value)
+
+        smtp_port_value = config.get("smtp_port", 25)
+        if isinstance(smtp_port_value, str):
+            cleaned_value = smtp_port_value.strip().replace('"', "")
+            self.smtp_port = int(cleaned_value)
+        else:
+            self.smtp_port = int(smtp_port_value)
 
         if not self.from_address or not self.to_addresses:
             logger.error("Email from_address and to_addresses are required")
