@@ -61,7 +61,7 @@ jobs:
 
       - name: Build and push
         id: build-and-push
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           push: true
           context: ${{ env.DOCKER_CONTEXT_PATH }}
