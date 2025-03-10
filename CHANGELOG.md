@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.0](https://github.com/braveokafor/healthchecker-py/compare/v0.1.0...v0.2.0) (2025-03-10)
+
+
+### Features
+
+* add arm docker image support ([e2f5bff](https://github.com/braveokafor/healthchecker-py/commit/e2f5bff0fcda694736e6346dd0aed4cc71d08385))
+* added arm docker image support ([31eec98](https://github.com/braveokafor/healthchecker-py/commit/31eec98c79071afd49521ffd455f95e79d3531ca))
+
 ## 0.1.0 (2025-03-02)
 
 
