@@ -1,6 +1,6 @@
 services:
   healthchecker:
-    image: ghcr.io/braveokafor/healthchecker-py:latest
+    image: ghcr.io/braveokafor/healthchecker-py:0.2.0
     #build:
     #  context: .
     #  dockerfile: Dockerfile
